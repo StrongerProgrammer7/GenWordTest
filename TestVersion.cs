@@ -7,9 +7,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Animation;
 using Numerics;
+using System.IO;
 
 namespace Генератор_вариантов
 {
+    using Ex = Microsoft.Office.Interop.Excel;
+
     //Класс, хранящий текст заданий варианта и ответы к заданиям
     class TestVersion
     {
@@ -44,9 +47,9 @@ namespace Генератор_вариантов
         public TestVersion(decimal numOfVersion)
         {
             _versionNum = numOfVersion;
-            _tasks = new string[7];
-            _solutions = new List<double>[7];
-            _stringSolutions = new string[7];
+            _tasks = new string[8];
+            _solutions = new List<double>[8];
+            _stringSolutions = new string[8];
             _binomialCoefs = new double[201][];
             for (int i = 0; i < 200; ++i)
             {
@@ -69,8 +72,8 @@ namespace Генератор_вариантов
             generateFifthTask();
             generateSixthTask();
             generateSeventhTask();
-            /*generateEighthTask();
-            generateNinthTask();
+            generateEighthTask();
+            /*generateNinthTask();
             generateTenthTask();
             generateEleventhTask();
             generateTwelfthTask();
@@ -83,13 +86,13 @@ namespace Генератор_вариантов
 
             //Собираем весь текст в одну переменную
             _versionText = string.Empty;
-            for (int i = 0; i < 7; ++i)
+            for (int i = 0; i < 8; ++i)
                 _versionText += _tasks[i];
-
+            _versionText += "\n\n\n";
             //Собираем ответы в одну переменную
             _answersText = string.Empty;
             _answersText = _versionNum + " ВАРИАНТ\n";
-            for (int i = 0; i < 7; ++i)
+            for (int i = 0; i < 8; ++i)
             {
                 if (_stringSolutions[i] == null)
                     for (int j = 0; j < _solutions.ElementAt(i).Count; ++j)
@@ -327,10 +330,10 @@ namespace Генератор_вариантов
                 possib = rand_generator.Next(1, 9)*0.001;
                 _tasks[3] += possib + ". Найти вероятность того, что в течение часа выйдут из строя: а) ";
 
-                int_params[1] = rand_generator.Next(5,5+ int_params[0]/3);
+                int_params[1] = rand_generator.Next(2,2+ int_params[0]/200);
                 _tasks[3] += int_params[1] + " автоматов; б) от ";
 
-                int_params[2] = rand_generator.Next(2, 2 + int_params[0] / 4);
+                int_params[2] = rand_generator.Next(2, 2 + int_params[0] / 180);
                 _tasks[3] += int_params[2] + " до ";
 
                 int_params[3] = rand_generator.Next(int_params[2], int_params[2] + int_params[0] / 3);
@@ -442,7 +445,7 @@ namespace Генератор_вариантов
                 ///
                 Random rand_generator = new Random();
 
-                _tasks[5] = "\n\n" + _versionNum + ".6.  Задана плотность распределения случайной величины Х: f(x) = { [";
+                _tasks[5] = "\n\n" + _versionNum + ".6.  Задана плотность распределения случайной величины \nХ: f(x) = { [";
                 int_params[0] = rand_generator.Next(2, 16);
                 _tasks[5] += int_params[0] + "Ax^ ";
                 int_params[1] = rand_generator.Next(1, 10);
@@ -475,19 +478,80 @@ namespace Генератор_вариантов
 
         private void generateEighthTask()
         {
-            double[] double_params = new double[2];
+            int[] paramXi = new int[6];
+            int[] paramNi = new int[6];
             Random rand_generator = new Random();
-            //Восьмое задание
-            _tasks[7] = "\n\n" + _versionNum + ".8.  Для сигнализации о пожаре установлены два независимо работающих сигнализатора. Вероятность того, "
-                + "что при пожаре сигнализатор сработает, равна ";
-            double_params[0] = rand_generator.Next(84, 99) * 0.01;
-            _tasks[7] += double_params[0] + " для первого сигнализатора и ";
-            double_params[1] = rand_generator.Next(75, 99) * 0.01;
-            _tasks[7] += double_params[1] + " для второго. Найти вероятность того, что при пожаре сработает только один сигнализатор.";
+            ///Дано статистическое распределение выборки: в первой строке указаны выборочные варианты Xi " +
+            ///"а во второй строке – соответственные частоты Ni количественного признака Х). Требуется найти: " +
+            ///"\n1. Методом произведений: а) выборочную среднюю; б) выборочное среднее квадратическое отклонение; " +
+            ///"\n2. Доверительные интервалы для оценки неизвестного математического ожидания α с заданной надежностью ϒ = 0,95. " +
+            ///"\n3. Пользуясь критерием Пирсона, при уровне значимости α=0,05, установить, согласуется ли гипотеза " +
+            ///"о нормальном распределении генеральной совокупности с данными выборки объема n = 100." +
+            ///"\nXi(Ni)\t |110 (5) | 115 (10) | 120 (30) |\n| 125 (25) | 130 (15) | 135 (10) | 140 (5) ";
+            double reliability = rand_generator.Next(1, 40) * 0.01;
+            reliability = reliabilityRand(reliability);
+            
+            _tasks[7] = "\n\n" + _versionNum + ".8.  Дано статистическое распределение выборки: в первой строке указаны выборочные варианты Xi" +
+                " а во второй строке – соответственные частоты Ni количественного признака Х). Требуется найти:\n" +
+                "1. Методом произведений: а) выборочную среднюю; б) выборочное среднеквадратическое; \n" +
+            "2. Доверительные интервалы для оценки неизвестного математического ожидания α с заданной надежностью ϒ = " + reliability + "\n";
 
-            _solutions[7] = eighthSolution(double_params[0], double_params[1]);
+            paramXi[0] = rand_generator.Next(2, 150);
+            int step = rand_generator.Next(2, 20);
+            paramXi[1] = paramXi[0] + step;
+            paramXi[2] = paramXi[1] + step;
+            paramXi[3] = paramXi[2] + step;
+            paramXi[4] = paramXi[3] + step;
+            paramXi[5] = paramXi[4] + step;
+            
+            paramNi[0] = rand_generator.Next(1, 30);
+            paramNi[1] = rand_generator.Next(paramNi[0] + 1, paramNi[0]+5);
+            paramNi[2] = rand_generator.Next(2, 25);
+            paramNi[3] = rand_generator.Next(3, 30);
+            paramNi[4] = rand_generator.Next(15, 29);
+            paramNi[5] = rand_generator.Next(1, 20);
+            for(int i=paramNi.Length -1;i>=1;i--)
+            {
+                int j = rand_generator.Next(i + 1);
+                int tmp = paramNi[j];
+                paramNi[j] = paramNi[i];
+                paramNi[i] = tmp;
+            }
+
+            double sumN = paramNi[0] + paramNi[1] + paramNi[2] + paramNi[3] + paramNi[4] + paramNi[5];
+            double significanceLevel = 0;
+            if (sumN < 100)
+            {
+                significanceLevel = 0.05;
+            }
+            else
+                significanceLevel = 0.01;
+            _tasks[7] += "3. Пользуясь критерием Пирсона, при уровне значимости α= " + significanceLevel + ", установить, согласуется ли гипотеза о нормальном распределении генеральной совокупности с данными выборки объема n=";
+            _tasks[7] += sumN + "\n";
+            _tasks[7] += " Xi: " + paramXi[0] + "\t" + paramXi[1] + "\t" + paramXi[2] + "\t" + paramXi[3] + "\t" + paramXi[4] + "\t" + paramXi[5] + "\n";
+            _tasks[7] += " Ni: "+ paramNi[0] + "\t" + paramNi[1] + "\t" + paramNi[2] + "\t" + paramNi[3] + "\t" + paramNi[4] + "\t" + paramNi[5] + "\n";
+
+            _stringSolutions[7] = eighthSolution(paramXi, paramNi, reliability, significanceLevel);
+      
         }
-
+        private double reliabilityRand(double reliability)
+        {
+            if ((reliability * 100) >= 1 && (reliability * 100) < 5)
+                return 0.99;
+            if ((reliability * 100) >= 5 && (reliability * 100) < 10)
+                return 0.95;
+            if ((reliability * 100) >= 10 && (reliability * 100) < 15)
+                return 0.9;
+            if ((reliability * 100) >= 15 && (reliability * 100) < 20)
+                return 0.85;
+            if ((reliability * 100) >= 20 && (reliability * 100) < 25)
+                return 0.8;
+            if ((reliability * 100) >= 25 && (reliability * 100) < 30)
+                return 0.75;
+            if ((reliability * 100) >= 30)
+                return 0.7;
+            return 0.95;
+        }
         private void generateNinthTask()
         {
             int[] int_params = new int[3];
@@ -800,7 +864,7 @@ namespace Генератор_вариантов
                     int k1 = param[2], k2 = param[3];
                     double x1 = (k1 - param[0] * possib) / (Math.Sqrt(param[0] * possib * (1 - possib)));
                     double x2 = (k2 - param[0] * possib) / (Math.Sqrt(param[0] * possib * (1 - possib)));
-                    resStr += "б) \nФ(" + x2 + ") - Ф(" + x1 + ");\t";
+                    resStr += "\nб) Ф(" + x2 + ") - Ф(" + x1 + ") = \t";
                     result2 = resultMoivreLaplace(x1, x2);
                     resStr += "" + result2 +"\t";
                 }
@@ -824,17 +888,14 @@ namespace Генератор_вариантов
                 {
                     result3[0] = multNP;
                 }
+                if ((multNP - (1 - possib)) % 1 == 0)
+                {
+                    result3[0] = multNP - (1 - possib);
+                    result3[1] = multNP + possib;
+                }
                 else
                 {
-                    if ((multNP - (1 - possib)) % 1 == 0)
-                    {
-                        result3[0] = multNP - (1 - possib);
-                        result3[1] = multNP + possib;
-                    }
-                    else
-                    {
-                        result3[0] = Math.Round(multNP - (1 - possib));
-                    }
+                    result3[0] = Math.Round(multNP - (1 - possib));
                 }
                 
                 if (result3[1] != 0)
@@ -874,7 +935,7 @@ namespace Генератор_вариантов
                     int k1 = param[2], k2 = param[3];
                     double x1 = (k1 - param[0] * possib) / (Math.Sqrt(param[0] * possib * (1 - possib)));
                     double x2 = (k2 - param[0] * possib) / (Math.Sqrt(param[0] * possib * (1 - possib)));
-                    resStr += "\nб) Ф(" + x2 + ") - Ф(" + x1 + ");\t";
+                    resStr += "\nб) Ф(" + x2 + ") - Ф(" + x1 + ")=";
                     result2 = resultMoivreLaplace(x1, x2);
                     resStr += "" + result2 + "\t";
                 }
@@ -889,7 +950,7 @@ namespace Генератор_вариантов
                     result2 = sum;
                     resStr += "\n б) " + result2 + "\t";
                 }
-                resStr = "\n";
+                resStr += "\n";
                 ///Наивероятнейшее
                 double[] result3 = { 0, 0 };
                 double multNP = param[0] * possib;
@@ -1092,7 +1153,7 @@ namespace Генератор_вариантов
                 resStr = "A = 1/ʃx^" + powerX + "dx, 0 < x < " + endInterval + ";\n" +
                     "A = "+ A;
                 resStr += "\nF(x) = 0, при х ≤ 0 " +
-                    "\nF(x) =" + A + "*( x ^ " + powerX + 1 + "/(" + powerX + 1 + ")), при 0 < x ≤ " + endInterval;
+                    "\nF(x) =" + A + "*( x ^ " + (powerX + 1) + "/(" + (powerX + 1) + ")), при 0 < x ≤ " + endInterval;
                 resStr += "\nF(x) = 1, при х > " + endInterval;
                 //Характеристики
                 resStr += "\n M(X) = " + A * (Math.Pow(endInterval, powerX + 2) /( powerX + 2)) +"\n" ;
@@ -1109,13 +1170,15 @@ namespace Генератор_вариантов
                 resStr = "A = 1/ʃ" + coef + "x^" + powerX + " - 1 dx, 1 < x < " + endInterval + ";\n" +
                     "A = " + A;
                 resStr += "\nF(x) = 0, при х ≤ 1 \n " +
-                    "\nF(x) =" + A + "*("+coef+" x ^ " + powerX + 1 + "/(" + powerX + 1 + ")) - x, при 1 < x ≤ " + endInterval;
+                    "\nF(x) =" + A + "*("+coef+" x ^ " + (powerX + 1) + "/(" + powerX + 1 + ")) - x, при 1 < x ≤ " + endInterval;
                 resStr += "\nF(x) = 1, при х > " + endInterval;
+
                 //Характеристики
                 integralEndInterval = (coef * Math.Pow(endInterval, powerX + 2) / powerX + 2) - (Math.Pow(endInterval, 2) / 2);
                 integralBeginInterval = (coef / (powerX + 2)) - 0.5;
                 resStr += "\n M(X) = " + (integralEndInterval - integralBeginInterval) + "\n";
-                double variance = ((coef * Math.Pow(endInterval, powerX + 3) / powerX + 3) - (Math.Pow(endInterval, 3) / 3) - (coef / (powerX + 3)) - 1/3) - Math.Pow((integralEndInterval - integralBeginInterval),2);
+
+                double variance = ((coef * Math.Pow(endInterval, powerX + 3) / (powerX + 3)) - (Math.Pow(endInterval, 3) / 3) - (coef / (powerX + 3)) - 1/3) - Math.Pow((integralEndInterval - integralBeginInterval),2);
                 resStr += "D(X) = M(X^2) - [M(X)]^2 = " + variance + "\n σ(Х) = " + Math.Sqrt(variance);
             }
             return resStr;
@@ -1126,22 +1189,243 @@ namespace Генератор_вариантов
         {
             List<double> resultList = new List<double>();
              //P(|X-m|<б)=Ф(beta-m/sigma)-Ф(alfa-m/sigma)
-             double x1 = (double)((param[3]-param[0])/param[1]);
-             double x2 = (double)((param[2] - param[0]) / param[1]);
+             double x1 = ((param[3] - param[0]) / param[1]);
+             double x2 = ((param[2] - param[0]) / param[1]);
              double result = resultMoivreLaplace(x1, x2);
              resultList.Add(result);
-             //P(|X-m|<б)=2Ф(б/sigma)
-             result = 2.0 * Moivre_LaplacePhi(param[4] / param[1]);
-             resultList.Add(result);
+            //P(|X-m|<б)=2Ф(б/sigma)
+            double x = (param[4] / param[1]);
+            result = 2.0 * Moivre_LaplacePhi(x);
+            resultList.Add(result);
             return resultList;
         }
 
-        private List<double> eighthSolution(double firstSignDeviceProb, double secondSignDeviceProb)
+        private string eighthSolution(int[] arrX, int[] arrN, double reliability,double significanceLevel)
         {
-            double result = firstSignDeviceProb * (1 - secondSignDeviceProb) + secondSignDeviceProb * (1 - firstSignDeviceProb);
-            List<double> resultList = new List<double>();
-            resultList.Add(result);
-            return resultList;
+            
+            string resStr = "";
+            int indexMaxN = 0,max = arrN[0],C = 0;
+
+            for(int i=0;i<arrN.Length;i++)
+            {
+                if(arrN[i]>max)
+                {
+                    indexMaxN = i;
+                    max = arrN[i];
+                    C = arrX[i];
+                }
+            }
+            int[] u = new int[6];
+            for(int i=0,j=1;i<u.Length;i++)
+            {
+                if (i <= indexMaxN)
+                    u[i] = -indexMaxN + i;
+                else
+                {
+                    u[i] = j;
+                    j++;
+                }
+            }
+
+            int[] mult_nu = new int[6];
+            int[] mult_nuu = new int[6];
+            int[] mult_n_sumu1pow2 = new int[6];
+            int sumNegative = 0, sumPossitive = 0, sum_multnuu =0 , sum_mult_n_sumu1pow2 = 0,sumN = 0;
+            for(int i=0;i<mult_nu.Length;i++)
+            {
+                mult_nu[i] = arrN[i] * u[i];
+                mult_nuu[i] = arrN[i] * u[i] * u[i];
+                mult_n_sumu1pow2[i] = arrN[i] * ((u[i] + 1) * (u[i] + 1));
+                //Сумма столбцов
+                if (mult_nu[i] < 0)
+                    sumNegative += mult_nu[i];
+                else
+                    sumPossitive += mult_nu[i];
+                sum_multnuu += mult_nuu[i];
+                sum_mult_n_sumu1pow2 += mult_n_sumu1pow2[i];
+                sumN += arrN[i];
+                //----------------------
+            }
+            int diff = sumPossitive - Math.Abs(sumNegative);
+            if(checkCalc8Mission(arrN,u, sum_mult_n_sumu1pow2)==false)
+            {
+                resStr = " Error calculation! ";
+                return resStr;
+            }
+            double M1 = (double)(diff/sumN), M2 = (double)(sum_multnuu/sumN);
+            double h = Math.Abs(arrX[0]-arrX[1]);
+
+            double sampleAverage = M1*h+C;
+            double sampleVariance = (M2 - M1 * M1) * h * h;
+            double correctedVariance = (sumN / (sumN - 1)) * sampleVariance;
+            double correctedStandartDeviation = Math.Sqrt(correctedVariance);
+            double t = readExecelStuard(sumN, reliability,false);
+
+            double confidencIntervalLeft = sampleAverage - (t * correctedStandartDeviation / Math.Sqrt(sumN));
+            double confidencIntervalRight = sampleAverage + (t * correctedStandartDeviation / Math.Sqrt(sumN));
+
+            for(int i=0;i<arrX.Length;i++)
+            {
+                if(i==0)
+                {
+                    resStr += "Xi\tNi\tUi\tNiUi\tNiUi^2\tNi(Ui+1)^2\n";
+                    resStr += arrX[i] + "\t" + arrN[i] + "\t" + u[i] + "\t" + mult_nu[i] + "\t" + mult_nuu[i] + "\t" + mult_n_sumu1pow2[i] + "\n";
+                }
+                else
+                    resStr += arrX[i] + "\t" + arrN[i] + "\t" + u[i] + "\t" + mult_nu[i] + "\t" + mult_nuu[i] + "\t" + mult_n_sumu1pow2[i] + "\n";
+            }
+            resStr += "Summa N = " + sumN + "\t Summa NiUi = " + diff + "\t Summa NiUiUi = " + sum_multnuu + "\t Summa Ni(Ui+1)^2 = " + sum_mult_n_sumu1pow2 + "\n";
+            resStr += " M1 = " + M1 + "\t M2 = " + M2 + "\t h = " + h + "\n";
+            resStr += "1) Выборочная средняя = " + sampleAverage + "\t Выборочная дисперсия = " + sampleVariance + " Исправленная дисперсия = " + correctedVariance + "\n";
+            resStr += " Исправленная среднеквадратическое отклонение = " + correctedStandartDeviation +"\n";
+            resStr += "2) При y = " + reliability + " N = " + sumN + " , t = " + t + "\n";
+            resStr += " Доверительный интервал : " + confidencIntervalLeft + " < a < " + confidencIntervalRight + "\n";
+
+            resStr += "Выдвинем гипотезу H0: распределение генеральной совокупности X подчинено нормальному закону с параметрами x_ =" + sampleAverage + "и σ = " + (Math.Round(correctedStandartDeviation,5)) + ". Проверим эту гипотезу по критерию Пирсона при уровне значимости α = " + significanceLevel + "\n";
+            
+            double[] U = new double[6];
+            double[] phiSmallFromU = new double[6];
+            double[] N0i = new double[6];
+            double[] difNiN0i_pow2_divNi0 = new double[6];
+            double observerValue = 0;
+            for(int i=0;i<arrX.Length;i++)
+            {
+                U[i] = Math.Round((arrX[i] - sampleAverage) / correctedStandartDeviation,5);
+                phiSmallFromU[i] = Math.Round(phiSmallLaplass(U[i]),5);
+                N0i[i] = Math.Round(((sumN*h/ correctedStandartDeviation)* phiSmallFromU[i]), 5);
+                difNiN0i_pow2_divNi0[i] = Math.Round((((arrN[i]-N0i[i])*(arrN[i]-N0i[i]))/N0i[i]), 5);
+                observerValue += difNiN0i_pow2_divNi0[i];
+                if(i==0)
+                {
+                    resStr += "Xi\t\tUi\\ttPhi(Ui)\t\tN0i\t\t(Ni-N0i)^2/Ni0\n";
+                    resStr += arrX[i] + "\t" + U[i] + "\t" + phiSmallFromU[i] + "\t" + N0i[i] + "\t" + difNiN0i_pow2_divNi0[i] + "\n";
+                }else
+                    resStr += arrX[i] + "\t" + U[i] + "\t" + phiSmallFromU[i] + "\t" + N0i[i] + "\t" + difNiN0i_pow2_divNi0[i] + "\n";
+            }
+            resStr += "Наблюдаемое значение = " + observerValue + "\n";
+            double controlValue = readExecelStuard((arrX.Length-3), (significanceLevel),true);
+            if (observerValue < controlValue)
+                resStr += " Контрольное значение = " + controlValue + " \n Набл меньше Контр => нулевую гипотезу о нормальном распределении можно принять при данном уровне значимости\n";
+            else
+                resStr += " Контрольное значение = " + controlValue + " \n Набл больше Контр => гипотезу о нормальном распределении генеральной совокупности отвергаем.\n";
+ 
+            return resStr;
+        }
+        private bool checkCalc8Mission(int[] arrN,int[] arrU,int sumLastColumnn)
+        {
+            int sum = 0, sum1 = 0, sumN = 0;
+            for(int i=0;i<arrN.Length;i++)
+            {
+                sum += arrN[i] * arrU[i] * arrU[i];
+                sum1 += arrN[i] * arrU[i];
+                sumN += arrN[i];
+            }
+            sum1 *= 2;
+            sum = sum + sum1 + sumN;
+            return sum == sumLastColumnn ? true : false;
+        }
+        private double readExecelStuard(int n,double reliability,bool HI)
+        {
+           Microsoft.Office.Interop.Excel.Application ObjExcel = new Microsoft.Office.Interop.Excel.Application();
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "\\Stuard.xlsx");
+            if (path != null)
+                path = Directory.GetCurrentDirectory() + @"\Stuard.xlsx";
+            else
+                return 0;
+            //Открываем книгу.                                                                                                                                                        
+            Microsoft.Office.Interop.Excel.Workbook ObjWorkBook = ObjExcel.Workbooks.Open(path, 0, false, 5, "", "", false, Microsoft.Office.Interop.Excel.XlPlatform.xlWindows, "", true, false, 0, true, false, false);
+
+            //Выбираем таблицу(лист).
+            Microsoft.Office.Interop.Excel.Worksheet ObjWorkSheet;
+            ObjWorkSheet = (Microsoft.Office.Interop.Excel.Worksheet)ObjWorkBook.Sheets[1];
+
+            // Указываем номер столбца (таблицы Excel) из которого будут считываться данные.
+            int column = 1;
+            reliability = (int)(reliability *100);
+            if(HI == false)
+            {
+                switch (reliability)
+                {
+                    case 99:
+                        column = 1;
+                        break;
+                    case 95:
+                        column = 2;
+                        break;
+                    case 90:
+                        column = 3;
+                        break;
+                    case 85:
+                        column = 4;
+                        break;
+                    case 80:
+                        column = 5;
+                        break;
+                    case 75:
+                        column = 6;
+                        break;
+                    case 70:
+                        column = 7;
+                        break;
+                    default:
+                        break;
+                }
+            }else
+            {
+                switch (reliability)
+                {
+                    case 1:
+                        column = 9;
+                        break;
+                    case 3:
+                        column = 10;
+                        break;
+                    case 5:
+                        column = 11;
+                        break;
+                    case 95:
+                        column = 12;
+                        break;
+                    case 98:
+                        column = 13;
+                        break;
+                    case 99:
+                        column = 14;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            var cellValue =0.0;
+           if (HI==false)
+            {
+                if (n - 1 == 0)
+                    n = 2;
+                if (n - 1 == 1)
+                    n = 2;
+                if (n > 150)
+                    n = 149;
+                cellValue = (ObjWorkSheet.Cells[(n - 1), column] as Microsoft.Office.Interop.Excel.Range).Value;
+            }
+            else
+            {
+                if (n == 0)
+                    n = 2;
+                if (n == 1)
+                    n = 2;
+                if (n > 30)
+                    n = 31;
+                cellValue = (ObjWorkSheet.Cells[n, column] as Microsoft.Office.Interop.Excel.Range).Value;
+            }
+
+            
+            /* Range usedColumn = ObjWorkSheet.UsedRange.Columns[numCol];
+             System.Array myvalues = (System.Array)usedColumn.Cells.Value2;
+             string[] strArray = myvalues.OfType<object>().Select(o => o.ToString()).ToArray();*/
+
+            // Выходим из программы Excel.
+            ObjExcel.Quit();
+            return cellValue;
         }
 
         private List<double> ninthSolution(int firstDiseasePercent, int secondDiseasePercent, int thirdDiseasePercent,

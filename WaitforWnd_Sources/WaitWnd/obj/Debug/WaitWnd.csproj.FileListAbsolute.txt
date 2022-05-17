@@ -1,0 +1,9 @@
+C:\Учёбка и не учёбка\Проги\Git Repositories\Probability-theory-project\WaitforWnd_Sources\WaitWnd\bin\Debug\WaitWnd.dll
+C:\Учёбка и не учёбка\Проги\Git Repositories\Probability-theory-project\WaitforWnd_Sources\WaitWnd\bin\Debug\WaitWnd.pdb
+C:\Учёбка и не учёбка\Проги\Git Repositories\Probability-theory-project\WaitforWnd_Sources\WaitWnd\obj\Debug\WaitWnd.Resource1.resources
+C:\Учёбка и не учёбка\Проги\Git Repositories\Probability-theory-project\WaitforWnd_Sources\WaitWnd\obj\Debug\WaitWnd.WaitForm.resources
+C:\Учёбка и не учёбка\Проги\Git Repositories\Probability-theory-project\WaitforWnd_Sources\WaitWnd\obj\Debug\WaitWnd.csproj.GenerateResource.cache
+C:\Учёбка и не учёбка\Проги\Git Repositories\Probability-theory-project\WaitforWnd_Sources\WaitWnd\obj\Debug\WaitWnd.csproj.CoreCompileInputs.cache
+C:\Учёбка и не учёбка\Проги\Git Repositories\Probability-theory-project\WaitforWnd_Sources\WaitWnd\obj\Debug\WaitWnd.dll
+C:\Учёбка и не учёбка\Проги\Git Repositories\Probability-theory-project\WaitforWnd_Sources\WaitWnd\obj\Debug\WaitWnd.pdb
+C:\Учёбка и не учёбка\Проги\Git Repositories\Probability-theory-project\WaitforWnd_Sources\WaitWnd\obj\Debug\WaitWnd.csprojAssemblyReference.cache

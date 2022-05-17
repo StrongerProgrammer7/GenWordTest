@@ -1,0 +1,12 @@
+C:\Учёбка и не учёбка\Проги\Git Repositories\Probability-theory-project\WaitforWnd_Sources\WaitWndTest\bin\Debug\WaitWndTest.exe
+C:\Учёбка и не учёбка\Проги\Git Repositories\Probability-theory-project\WaitforWnd_Sources\WaitWndTest\bin\Debug\WaitWndTest.pdb
+C:\Учёбка и не учёбка\Проги\Git Repositories\Probability-theory-project\WaitforWnd_Sources\WaitWndTest\bin\Debug\WaitWnd.dll
+C:\Учёбка и не учёбка\Проги\Git Repositories\Probability-theory-project\WaitforWnd_Sources\WaitWndTest\bin\Debug\WaitWnd.pdb
+C:\Учёбка и не учёбка\Проги\Git Repositories\Probability-theory-project\WaitforWnd_Sources\WaitWndTest\obj\Debug\WaitWndTest.csprojAssemblyReference.cache
+C:\Учёбка и не учёбка\Проги\Git Repositories\Probability-theory-project\WaitforWnd_Sources\WaitWndTest\obj\Debug\WaitWndTest.Form1.resources
+C:\Учёбка и не учёбка\Проги\Git Repositories\Probability-theory-project\WaitforWnd_Sources\WaitWndTest\obj\Debug\WaitWndTest.Properties.Resources.resources
+C:\Учёбка и не учёбка\Проги\Git Repositories\Probability-theory-project\WaitforWnd_Sources\WaitWndTest\obj\Debug\WaitWndTest.csproj.GenerateResource.cache
+C:\Учёбка и не учёбка\Проги\Git Repositories\Probability-theory-project\WaitforWnd_Sources\WaitWndTest\obj\Debug\WaitWndTest.csproj.CoreCompileInputs.cache
+C:\Учёбка и не учёбка\Проги\Git Repositories\Probability-theory-project\WaitforWnd_Sources\WaitWndTest\obj\Debug\WaitWndTest.csproj.CopyComplete
+C:\Учёбка и не учёбка\Проги\Git Repositories\Probability-theory-project\WaitforWnd_Sources\WaitWndTest\obj\Debug\WaitWndTest.exe
+C:\Учёбка и не учёбка\Проги\Git Repositories\Probability-theory-project\WaitforWnd_Sources\WaitWndTest\obj\Debug\WaitWndTest.pdb
